@@ -5,8 +5,8 @@
 
 function compress (originalImg, k)
     img = imread(originalImg);
-    [ph, pw, rgb] = size(img);
+    [ph, pw, _] = size(img);
 
-    img = img(1:(k+1):ph, 1:(k+1):pw, :);
-    imwrite(img, 'compressed.png');
+    img = img(1:k+1:ph, 1:k+1:pw, :);
+    imwrite(img, 'compressed.png', 'Compression', 'none');
 endfunction

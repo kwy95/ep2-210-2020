@@ -6,17 +6,17 @@
 % Recebe uma imagem comprimida e a descomprime usando o método bilinear ou o  método bicúbico.
 % A taxa de descompressão é dada pelo k e o h representa o tamanho do lado utilizado para o
 % método escolhido para a interpolação.
-function decompress(compressedImg, method, k, h)
+function decompress(compressedImg, method, k, h = k+1)
     C   = imread(compressedImg);
     C_e = expand(C, k);
     if (method == 1) % bilinear
         D = bilinear(C_e, k, h);
-        imwrite(D, 'decompressedBL.png');
+        imwrite(D, 'decompressedBL.png', 'Compression', 'none');
     elseif (method == 2) % bicubico
         D = bicubico(C_e, k, h);
-        imwrite(D, 'decompressedBC.png');
+        imwrite(D, 'decompressedBC.png', 'Compression', 'none');
     endif
-    imwrite(C_e, 'decompressed.png');
+    imwrite(C_e, 'decompressed.png', 'Compression', 'none');
 endfunction
 
 
@@ -27,13 +27,11 @@ function B = expand(A, k)
     ph = m + (m-1)*k;
     pw = n + (n-1)*k;
 
-    for y = 1:ph
-        for x = 1:pw
-            if (rem(y, k+1) == 1 && rem(x, k+1) == 1)
-                B(y , x, :) = A(((y - 1) / (k + 1)) + 1, ((x - 1) / (k + 1)) + 1, :);
-            endif
-        endfor
-    endfor
+    x = 1:k+1:pw;
+    y = 1:k+1:ph;
+
+    B(y , x, :) = A(((y - 1) / (k + 1)) + 1, ((x - 1) / (k + 1)) + 1, :);
+
 endfunction
 
 function C = bilinear(img, k, h)
@@ -53,10 +51,10 @@ function C = bilinear(img, k, h)
             for l = 1:3
                 E = [fx1y1(l); fx1y2(l); fx2y1(l); fx2y2(l)];
                 F = double(E);
-                X = inv(D)*F;
+                X = D\F;
                 for m = i:i+k+1
                     for n = j:j+k+1
-                        if (m != i && n != j)
+                        if ((m != i) || (n != j))
                             x = ((m-i)/(k+1))*h;
                             y = ((n-j)/(k+1))*h;
                             C(m, n, l) = X(1) + X(2).*x + X(3).*y + X(4).*x.*y;
@@ -132,12 +130,12 @@ function B = bicubico (A, k, h)
                        dxfx2y1(l), dxfx2y2(l), dxyfx2y1(l), dxyfx2y2(l)];
                 E = double(D);
                 % Matriz de coeficientes do polinomio intepolador
-                X = C*E*transpose(C);
+                X = C*E*(C');
                 % Para cada pixel dentro desse quadrado.
                 for m = i:i+k+1
                     for n = j:j+k+1
                         % Se não for o pixel original usado para a interpolação.
-                        if (m != i && n != j)
+                        if (m != i || n != j)
                             x = ((m-i)/(k+1))*h;
                             y = ((n-j)/(k+1))*h;
                             B(m, n, l) = [1, x, x.^2, x.^3]*X*[1; y; y.^2; y.^3];
