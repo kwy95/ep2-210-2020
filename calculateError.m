@@ -21,5 +21,4 @@ function err = calculateError(originalImg, decompressedImg)
     errB = norm(origB - decB)/norm(origB);
 
     err = (errR + errG + errB)/3;
-    err
 endfunction
