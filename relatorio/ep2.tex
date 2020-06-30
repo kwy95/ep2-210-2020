@@ -1,0 +1,103 @@
+\documentclass[12pt, a4paper]{article}
+\usepackage[headheight = 28pt, margin = 20mm, top = 30mm]{geometry}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{MAC0210\\30/06/2020}
+\chead{EP2\\}
+\rhead{Rubens Gomes Neto\\9318484}
+
+\begin{document}
+\section*{Parte 1}
+    Para essa parte foi necessário calcular uma função $g(x)$ em que valesse
+    a seguinte propriedade $g(x^*) = x^* \iff f(x^*) = 0$, para $f(x) = e^x - 2x^2$
+    foram testadas as seguintes funções:
+    \begin{align*}
+        g_{1}(x) &= \frac{e^x}{2x}\\
+        g_{2}(x) &= \ln(2x^2)\\
+        g_{3}(x) &= \frac{\sqrt{2e^2}}{2}\\
+        g_{4}(x) &= x - \frac{f(x)}{f'(x)}
+    \end{align*}
+    Para haver convergência no método é necessário que $|g'(x)| \leq \rho$ tal que
+    $\rho < 1$ próximo a raiz. Ao analisarmos os gráficos das funções $g_i$ vemos
+    que apenas $g_{4}$ satisfaz essa condição em todas as raízes.\\
+    \begin{figure}[h]
+        \centering
+        % \includegraphics[width=.7\textwidth]{funcs.png}
+        \caption{funções parte 1}
+    \end{figure}\\
+    O programa implementado calcula as raizes da função $f(x)$ pelo método do ponto
+    fixo, utilizando $g_{4}(x)$. Para tal é possível passar os limites $[a, b]$
+    assim como o número de pontos para busca de intervalos suspeitos.\\
+
+\section*{Parte 2}
+    Para a segunda parte o programa criado calcula e gera uma imagem das bacias
+    de Newton, com cores associadas as raízes e sombreamento associado ao número
+    de iterações executadas até a conversão. Caso não convergisse até \emph{max\_iter}
+    o ponto é associado ao preto.\\
+    As funções testadas foram as seguintes:
+    \begin{align*}
+        f_{0}(x) &= e^{x} - 2x^2\\
+        f_{1}(x) &= x^4 - 1\\
+        f_{2}(x) &= x^3 - 1\\
+        f_{3}(x) &= x^3 - 2x + 2\\
+        f_{4}(x) &= \sqrt{x^3} - 2x\\
+        f_{5}(x) &= e^{x^2} - e^{x}
+    \end{align*}
+
+    Para seleção de cores foi usada uma implementação do sistema \textbf{HSV} em
+    que após contar e numerar as raízes cada raiz era associada a um ponto
+    equidistante dos outros da banda de \emph{hue} usando a seguinte conversão
+    pra \textbf{RGB} de acordo com a seguinte tabela:\\
+    \begin{figure}[h]
+        \centering
+        % \includegraphics[width=.7\textwidth]{HSV-RGB-comparison.png}
+        \caption[]{conversão HSV - RGB}
+    \end{figure}\\
+    Com isso algumas das imagens geradas foram as seguintes:
+    \begin{figure}[h]
+        \begin{subfigure}{.3\textwidth}
+            % \includegraphics[width=.95\textwidth]{id1shd1.png}
+            \caption{$f_{1}(x) = x^4 - 1$}
+        \end{subfigure}
+        \begin{subfigure}{.3\textwidth}
+            % \includegraphics[width=.95\textwidth]{id2shd1.png}
+            \caption{$f_{2}(x) = x^3 - 1$}
+        \end{subfigure}
+        \begin{subfigure}{.3\textwidth}
+            % \includegraphics[width=.95\textwidth]{id3shd1.png}
+            \caption{$f_{3}(x) = x^3 - 2x + 2$}
+        \end{subfigure}
+        \caption{Polinomiais com $l = -2 + 2i$; $u = 2 - 2i$}
+    \end{figure}
+    \begin{figure}[h]
+        \begin{subfigure}{.5\textwidth}
+            % \includegraphics[width=.95\textwidth]{id4shd1.png}
+            \caption{shading = 1}
+        \end{subfigure}
+        \begin{subfigure}{.5\textwidth}
+            % \includegraphics[width=.95\textwidth]{id4shd2.png}
+            \caption{shading = 2}
+        \end{subfigure}
+        \caption{Função $f_4(x)$ com $l = -2 + 2i$; $u = 2 - 2i$}
+    \end{figure}
+    \begin{figure}[h]
+        \begin{subfigure}{.5\textwidth}
+            % \includegraphics[width=.95\textwidth]{id0shd2-025025075-025.png}
+            \caption{$l = -0.25 + 0.25i$; $u = 0.75 - 0.25i$}
+        \end{subfigure}
+        \begin{subfigure}{.5\textwidth}
+            % \includegraphics[width=.95\textwidth]{id5shd2-115005.png}
+            \caption{$l = -1 + 1.5i$; $u = 0.5i$}
+        \end{subfigure}
+        \caption{(a): $f_{0}(x) = e^{x} - 2x^2$; (b): $f_{5}(x) = e^{x^2} - e^{x}$}
+    \end{figure}
+
+\end{document}
