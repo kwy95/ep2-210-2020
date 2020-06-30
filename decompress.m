@@ -11,12 +11,12 @@ function decompress(compressedImg, method, k, h = k+1)
     C_e = expand(C, k);
     if (method == 1) % bilinear
         D = bilinear(C_e, k, h);
-        imwrite(D, 'decompressedBL.png', 'Compression', 'none');
+        imwrite(D, 'decompressed.png', 'Compression', 'none');
     elseif (method == 2) % bicubico
         D = bicubico(C_e, k, h);
-        imwrite(D, 'decompressedBC.png', 'Compression', 'none');
+        imwrite(D, 'decompressed.png', 'Compression', 'none');
     endif
-    imwrite(C_e, 'expanded.png', 'Compression', 'none');
+    % imwrite(C_e, 'expanded.png', 'Compression', 'none');
 endfunction
 
 
@@ -31,7 +31,6 @@ function B = expand(A, k)
     y = 1:k+1:ph;
 
     B(y , x, :) = A(((y - 1) / (k + 1)) + 1, ((x - 1) / (k + 1)) + 1, :);
-
 endfunction
 
 function C = bilinear(img, k, h)
@@ -66,6 +65,7 @@ function C = bilinear(img, k, h)
     endfor
 endfunction
 
+% derivadas como definidas no enunciado, com casos especiais para os extremos
 function D = derivax (i, j, k, h, ph, pw, F)
     if (j <= 1)
         D = (F(i, 1+(k+1), :) - F(i, 1, :)) ./ h;

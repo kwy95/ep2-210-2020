@@ -3,10 +3,10 @@
 %
 % Arquivo parte do EP2 de MAC0210
 
-function compress (originalImg, k)
+function compress (originalImg, k, output = 'compressed.png')
     img = imread(originalImg);
     [ph, pw, _] = size(img);
 
     img = img(1:k+1:ph, 1:k+1:pw, :);
-    imwrite(img, 'compressed.png', 'Compression', 'none');
+    imwrite(img, output, 'Compression', 'none');
 endfunction
